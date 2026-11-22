@@ -16,6 +16,9 @@ def plot_energies(
     max_energy=100,
     ylim=None,
     prefix="",
+    resampled_label="Proposal (reweighted)",
+    n_bins=100,
+    legend_kwargs=None,
 ):
     fig, ax = plt.subplots(figsize=(4, 3), dpi=300, constrained_layout=True)
     fig.patch.set_facecolor("white")
@@ -54,7 +57,7 @@ def plot_energies(
     if smc_samples_energy is not None:
         x_min = min(x_min, smc_samples_energy.min())
 
-    bin_edges = np.linspace(x_min, x_max, 100)
+    bin_edges = np.linspace(x_min, x_max, n_bins)
 
     ax.hist(
         energy_cropper(test_samples_energy.cpu()),
@@ -86,7 +89,7 @@ def plot_energies(
             histtype="step",
             linewidth=3,
             color="b",
-            label="Proposal (reweighted)",
+            label=resampled_label,
         )
     if smc_samples_energy is not None:
         ax.hist(
@@ -117,7 +120,7 @@ def plot_energies(
 
     plt.xlabel(r"$\mathcal{E}(x)$", labelpad=-5)  # , fontsize=35)
     plt.ylabel("Normalized Density")  # , fontsize=35)
-    plt.legend()  # fontsize=30)
+    plt.legend(**(legend_kwargs or {}))  # fontsize=30)
 
     fig.canvas.draw()
 
